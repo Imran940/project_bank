@@ -1,0 +1,60 @@
+.transactions{
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%,-50%);
+    width: 700px;
+    height: 350px;
+    border: 2px solid black;
+    font-family: sans-serif;
+}
+.welcome{
+    background-color: #800080;
+    padding:15px 0;
+    color: white;
+    letter-spacing: 0.2px;
+    border-bottom: 1px solid black;
+}
+.loading{
+    margin-bottom:15px ;
+    color: rgb(54, 54, 228);
+    font-size: 20px;
+}
+.depositBut{
+    position: relative;
+    top: 35px;
+    left: 450px;
+    width: 150px;
+    height: 33px;
+    background-color: rgb(31, 243, 31);
+    color:black;
+    font-size: 16px;
+    outline: none;
+    border: none;
+    border-radius: 5px;
+    box-shadow: 2px 2px 1px black;
+    cursor:pointer
+}
+.withdrawBut{
+    position: relative;
+    width: 150px;
+    height: 33px;
+    background-color:red;
+    color:white;
+    font-size: 16px;
+    outline: none;
+    border: none;
+    border-radius: 5px;
+    box-shadow: 2px 2px 1px black;
+    cursor:pointer;
+}
+.inputAmt{
+    border:1px solid gray;
+    height: 40px;
+    border-radius: 3px;
+    font-size: 18px;
+    
+}
+.inputAmt:focus{
+    border:1.5px solid purple;
+}

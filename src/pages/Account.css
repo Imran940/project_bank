@@ -1,0 +1,31 @@
+.pastTransaction{
+    position: relative;
+    left: 550px;
+    display: inline-block;
+    font-family: sans-serif;
+    border-bottom: 1px solid black;
+}
+table{
+    position: relative;
+    left: 400px;
+    top: 60px;
+}
+th{
+    background-color: aqua;
+}
+
+tr td{
+    padding: 10px 60px;
+}
+.noRecords{
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%,-50%);
+    width: 400px;
+    height: 150px;
+    background-color: rgb(201, 201, 201);
+    border: 1px solid black;
+    text-align: center;
+    line-height: 150px;
+}
