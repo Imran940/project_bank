@@ -1,76 +1,75 @@
 //configuration of database
-const mysql = require("mysql");
-const db = mysql.createConnection({
-    host: "localhost",
-    user: process.env.DB_USER,
-    password: process.env.DB_PASS,
-    database: process.env.DB_NAME
-})
+const db = require('../db/database');
 
-exports.getRecords = (req, res) => {
+exports.getRecords = async (req, res) => {
     const { username } = req.body;
-    const sql = `select * from account where CustName=?`;
-    db.query(sql, [username], (err, result) => {
-        if (!err) {
-            res.send(result);
-            console.log(result);
-        } else {
-            console.log(err);
-            res.send("Unable to get records due to some errorrs");
-        }
-    })
+    const result = await db('account').where({
+        CustName: username
+    }).select()
+
+    if (result.length > 0) {
+        res.send(result);
+        console.log(result);
+    }
+
 }
 
-exports.getRecord = (req, res) => {
-    const sql = "select Customer,Cust_bal from user";
-    db.query(sql, (err, result) => {
-        if (!err) {
-            console.log(result);
-            res.send(result);
-        } else {
-            console.log(err);
-        }
-    })
+exports.getRecord = async (req, res) => {
+
+    const result = await db('Customer', 'Cust_bal').from('user')
+    if (result) {
+        res.send(result);
+        console.log(result);
+    }
+
 }
 
-exports.getDeposit = (req, res) => {
+exports.getDeposit = async (req, res) => {
     const balance = parseInt(req.balance);
     const { date, username, amount } = req.body;
     const bal = balance + parseInt(amount);
-    const insertSql = `insert into account values(?,?,?,?,?)`;
-    const updateSql = "update user set Cust_bal=? where Customer=?";
-    db.query(insertSql, [date, username, amount, 0, bal], (err, result) => {
-        if (!err) {
-            db.query(updateSql, [bal, username]);
-            res.send(result);
-        }
-        else {
-            console.log(err);
-            res.send(err);
-        }
+
+    const result = await db('account').insert({
+        Date: date,
+        CustName: username,
+        Deposit: amount,
+        withdrawn: 0,
+        balance: bal
     })
+    if (result) {
+        await db('user')
+            .where('Customer', '=', username)
+            .update({
+                Cust_bal: bal
+            })
+        console.log(result);
+        res.send(result);
+    }
+
 
 }
 
-exports.getWithdraw = (req, res) => {
+exports.getWithdraw = async (req, res) => {
     const balance = parseInt(req.balance);
     const { date, username, amount } = req.body;
     if (balance < parseInt(amount)) {
         return res.status(400).send(`You do not have sufficcient balance and current balance is ${balance}`);
-
     }
     const bal = balance - parseInt(amount);
-    const insertSql = `insert into account values(?,?,?,?,?)`;
-    const updateSql = "update user set Cust_bal=? where Customer=?";
-    db.query(insertSql, [date, username, 0, amount, bal], (err, result) => {
-        if (!err) {
-            db.query(updateSql, [bal, username]);
-            res.send(result);
-        }
-        else {
-            console.log(err);
-            res.send(err);
-        }
+    const result = await db('account').insert({
+        Date: date,
+        CustName: username,
+        Deposit: 0,
+        withdrawn: amount,
+        balance: bal
     })
-
+    if (result) {
+        await db('user')
+            .where('Customer', '=', username)
+            .update({
+                Cust_bal: bal
+            })
+        console.log(result);
+        res.send(result);
+    }
 }
